@@ -1,0 +1,10 @@
+device=cpu, B=500, iters=3000, lr=0.001, l2=0.0001, trials=5
+N=30, M=200: done (5 trials)
+N=10, M=10000: done (5 trials)
+N=30, M=10000: done (5 trials)
+N=100, M=10000: done (5 trials)
+N=200, M=10000: done (5 trials)
+N=400, M=10000: done (5 trials)
+N=600, M=10000: done (5 trials)
+N=800, M=10000: done (5 trials)
+Saved all run artifacts to: /home/takanami/cot_asymptotics/linear_dynamics/results/linear_dynamics_20260417_170446
