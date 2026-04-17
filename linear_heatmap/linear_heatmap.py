@@ -10,28 +10,23 @@ import torch.nn as nn
 # ==================================
 # Simple finite-M dynamics experiment
 # (fixed D; vary M, N)
-# softmax attention + data-only/history mask
+# linear attention + data-only mask
 # ==================================
 D = 50
-#M_LIST = [10, 100, 1000, 10000]
-#N_LIST = [10, 100, 1000]
-
-# log10 空間で等間隔に 15 点取り、最終的に整数化
-M_LIST = np.round(np.logspace(2, 4, 15)).astype(int).tolist()
-N_LIST = np.round(np.logspace(1, 3, 15)).astype(int).tolist()
+M_LIST = np.round(np.linspace(10, 400, 15)).astype(int).tolist()
+N_LIST = np.round(np.linspace(10, 400, 15)).astype(int).tolist()
 
 BATCH_SIZE = 300
 ADAM_LR = 1e-3
 PARAM_L2_LAMBDA = 0.001
-ITERATIONS = 5000
+ITERATIONS = 3000
 EVAL_T_LIST = list(range(0, 32))
 T_HEATMAP = 28
 EVAL_BATCH_SIZE = 4096
 SEED = 941
 N_TRIALS = 1  # fixed by design
 
-USE_HISTORY_AT_INFERENCE = True
-ATTN_MASK_MODE = "history_cot"  # "data_only" | "history_cot"
+USE_HISTORY_AT_INFERENCE = False
 
 DE = 2 * D + 2
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -67,34 +62,25 @@ def build_Z(x, y, w_prefix):
     z[:, d, :n] = y
     for step, w_t in enumerate(w_prefix):
         z[:, d + 1 : d + 1 + d, n + step] = w_t
-    #! last token is 1.0 (not : in all previous cases)
     z[:, -1, -1] = 1.0
     return z
 
 
-def build_attn_mask(T, L, device, mode="data_only"):
-    # user-specified base style
-    attn_mask = torch.zeros(T, T, device=device)
-
-    if mode == "data_only":
-        attn_mask[-1, L:] = float("-inf")
-    elif mode == "history_cot":
-        # allow examples + past estimate tokens, block only self
-        attn_mask[-1, T - 1] = float("-inf")
-    else:
-        raise ValueError(f"Unknown mask mode: {mode}")
-    return attn_mask
+def build_data_src_mask(t, n, device):
+    mask = torch.zeros(t, device=device)
+    mask[:n] = 1.0
+    return mask
 
 
-def f_softmax_last(z, v, w, n, mask_mode="data_only"):
-    b, de, t = z.shape
+def f_lsa_last(z, v, w, n, src_mask=None):
     z_last = z[:, :, -1]
-    wz_last = torch.einsum("ij,bj->bi", w, z_last)
-    logits = torch.einsum("bdt,bd->bt", z, wz_last) / np.sqrt(de)
-    attn_mask = build_attn_mask(T=t, L=n, device=z.device, mode=mask_mode)
-    logits = logits + attn_mask[-1].unsqueeze(0)
-    attn = torch.softmax(logits, dim=-1)
-    weighted = torch.einsum("bdt,bt->bd", z, attn)
+    wz = torch.einsum("ij,bj->bi", w, z_last)
+    scores = torch.einsum("bdt,bd->bt", z, wz) / n
+    if src_mask is not None:
+        if src_mask.dim() == 1:
+            src_mask = src_mask.unsqueeze(0)
+        scores = scores * src_mask
+    weighted = torch.einsum("bdt,bt->bd", z, scores)
     out_last = z_last + torch.einsum("ij,bj->bi", v, weighted)
     return out_last
 
@@ -103,7 +89,8 @@ def no_cot_train_loss(v, w, x, y, w_star):
     n = x.shape[2]
     w0 = sample_w0_random(x, D, x.device)
     z0 = build_Z(x, y, [w0])
-    pred = f_softmax_last(z0, v, w, n=n, mask_mode="data_only")
+    src_mask = build_data_src_mask(z0.shape[2], n=n, device=z0.device)
+    pred = f_lsa_last(z0, v, w, n=n, src_mask=src_mask)
     w_hat = pred[:, D + 1 : D + 1 + D]
     return ((w_hat - w_star) ** 2).sum(dim=1).mean()
 
@@ -115,7 +102,6 @@ def eval_dynamics_curve(
     t_list,
     batch_size=EVAL_BATCH_SIZE,
     use_history=USE_HISTORY_AT_INFERENCE,
-    mask_mode=ATTN_MASK_MODE,
 ):
     x, y, w_star = sample_task_batch(batch_size, n=n)
     with torch.no_grad():
@@ -128,14 +114,16 @@ def eval_dynamics_curve(
             w_hist = [w_hat]
             for t in range(1, max_t + 1):
                 z = build_Z(x, y, w_hist)
-                pred = f_softmax_last(z, v, w, n=n, mask_mode=mask_mode)
+                src_mask = build_data_src_mask(z.shape[2], n=n, device=z.device)
+                pred = f_lsa_last(z, v, w, n=n, src_mask=src_mask)
                 w_hat = pred[:, D + 1 : D + 1 + D]
                 losses[t] = ((w_hat - w_star) ** 2).mean(dim=1).mean().item()
                 w_hist.append(w_hat)
         else:
             for t in range(1, max_t + 1):
                 z = build_Z(x, y, [w_hat])
-                pred = f_softmax_last(z, v, w, n=n, mask_mode=mask_mode)
+                src_mask = build_data_src_mask(z.shape[2], n=n, device=z.device)
+                pred = f_lsa_last(z, v, w, n=n, src_mask=src_mask)
                 w_hat = pred[:, D + 1 : D + 1 + D]
                 losses[t] = ((w_hat - w_star) ** 2).mean(dim=1).mean().item()
 
@@ -166,7 +154,6 @@ def train_model_no_cot_finite(train_data, iterations=ITERATIONS):
 def save_raw_results(outdir, results_by_m_n):
     os.makedirs(outdir, exist_ok=True)
 
-    # config
     cfg_lines = [
         f"timestamp={datetime.now().isoformat()}",
         f"D={D}",
@@ -182,13 +169,11 @@ def save_raw_results(outdir, results_by_m_n):
         f"SEED={SEED}",
         f"N_TRIALS={N_TRIALS}",
         f"USE_HISTORY_AT_INFERENCE={USE_HISTORY_AT_INFERENCE}",
-        f"ATTN_MASK_MODE={ATTN_MASK_MODE}",
         f"device={device}",
     ]
     with open(os.path.join(outdir, "config.txt"), "w", encoding="utf-8") as f:
         f.write("\n".join(cfg_lines) + "\n")
 
-    # lists
     np.savetxt(os.path.join(outdir, "M_list.csv"), np.array(M_LIST, dtype=int), delimiter=",", fmt="%d")
     np.savetxt(os.path.join(outdir, "N_list.csv"), np.array(N_LIST, dtype=int), delimiter=",", fmt="%d")
     np.savetxt(
@@ -198,7 +183,6 @@ def save_raw_results(outdir, results_by_m_n):
         fmt="%d",
     )
 
-    # long raw data: m, n, t, error
     rows = []
     for m in M_LIST:
         for n in N_LIST:
@@ -207,7 +191,6 @@ def save_raw_results(outdir, results_by_m_n):
     long_arr = np.array(rows, dtype=float)
     np.savetxt(os.path.join(outdir, "curves_long.csv"), long_arr, delimiter=",", fmt="%.10e")
 
-    # heatmap at fixed t
     heat = np.zeros((len(M_LIST), len(N_LIST)), dtype=float)
     for i, m in enumerate(M_LIST):
         for j, n in enumerate(N_LIST):
@@ -220,7 +203,7 @@ def main():
     parser.add_argument(
         "--outdir",
         type=str,
-        default=os.path.join(os.path.dirname(__file__), "results", "latest_softmax_heatmap"),
+        default=os.path.join(os.path.dirname(__file__), "results", "latest_linear_heatmap"),
     )
     args = parser.parse_args()
 
@@ -257,4 +240,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -1,0 +1,250 @@
+device=cpu, D=50, M_LIST=[10, 16, 27, 44, 72, 118, 193, 316, 518, 848, 1389, 2276, 3728, 6105, 10000], N_LIST=[10, 14, 19, 27, 37, 52, 72, 100, 139, 193, 268, 373, 518, 720, 1000], B=300, iters=5000, lr=0.001, l2=0.001, trials=1
+M=10, N=10: done
+M=10, N=14: done
+M=10, N=19: done
+M=10, N=27: done
+M=10, N=37: done
+M=10, N=52: done
+M=10, N=72: done
+M=10, N=100: done
+M=10, N=139: done
+M=10, N=193: done
+M=10, N=268: done
+M=10, N=373: done
+M=10, N=518: done
+M=10, N=720: done
+M=10, N=1000: done
+M=16, N=10: done
+M=16, N=14: done
+M=16, N=19: done
+M=16, N=27: done
+M=16, N=37: done
+M=16, N=52: done
+M=16, N=72: done
+M=16, N=100: done
+M=16, N=139: done
+M=16, N=193: done
+M=16, N=268: done
+M=16, N=373: done
+M=16, N=518: done
+M=16, N=720: done
+M=16, N=1000: done
+M=27, N=10: done
+M=27, N=14: done
+M=27, N=19: done
+M=27, N=27: done
+M=27, N=37: done
+M=27, N=52: done
+M=27, N=72: done
+M=27, N=100: done
+M=27, N=139: done
+M=27, N=193: done
+M=27, N=268: done
+M=27, N=373: done
+M=27, N=518: done
+M=27, N=720: done
+M=27, N=1000: done
+M=44, N=10: done
+M=44, N=14: done
+M=44, N=19: done
+M=44, N=27: done
+M=44, N=37: done
+M=44, N=52: done
+M=44, N=72: done
+M=44, N=100: done
+M=44, N=139: done
+M=44, N=193: done
+M=44, N=268: done
+M=44, N=373: done
+M=44, N=518: done
+M=44, N=720: done
+M=44, N=1000: done
+M=72, N=10: done
+M=72, N=14: done
+M=72, N=19: done
+M=72, N=27: done
+M=72, N=37: done
+M=72, N=52: done
+M=72, N=72: done
+M=72, N=100: done
+M=72, N=139: done
+M=72, N=193: done
+M=72, N=268: done
+M=72, N=373: done
+M=72, N=518: done
+M=72, N=720: done
+M=72, N=1000: done
+M=118, N=10: done
+M=118, N=14: done
+M=118, N=19: done
+M=118, N=27: done
+M=118, N=37: done
+M=118, N=52: done
+M=118, N=72: done
+M=118, N=100: done
+M=118, N=139: done
+M=118, N=193: done
+M=118, N=268: done
+M=118, N=373: done
+M=118, N=518: done
+M=118, N=720: done
+M=118, N=1000: done
+M=193, N=10: done
+M=193, N=14: done
+M=193, N=19: done
+M=193, N=27: done
+M=193, N=37: done
+M=193, N=52: done
+M=193, N=72: done
+M=193, N=100: done
+M=193, N=139: done
+M=193, N=193: done
+M=193, N=268: done
+M=193, N=373: done
+M=193, N=518: done
+M=193, N=720: done
+M=193, N=1000: done
+M=316, N=10: done
+M=316, N=14: done
+M=316, N=19: done
+M=316, N=27: done
+M=316, N=37: done
+M=316, N=52: done
+M=316, N=72: done
+M=316, N=100: done
+M=316, N=139: done
+M=316, N=193: done
+M=316, N=268: done
+M=316, N=373: done
+M=316, N=518: done
+M=316, N=720: done
+M=316, N=1000: done
+M=518, N=10: done
+M=518, N=14: done
+M=518, N=19: done
+M=518, N=27: done
+M=518, N=37: done
+M=518, N=52: done
+M=518, N=72: done
+M=518, N=100: done
+M=518, N=139: done
+M=518, N=193: done
+M=518, N=268: done
+M=518, N=373: done
+M=518, N=518: done
+M=518, N=720: done
+M=518, N=1000: done
+M=848, N=10: done
+M=848, N=14: done
+M=848, N=19: done
+M=848, N=27: done
+M=848, N=37: done
+M=848, N=52: done
+M=848, N=72: done
+M=848, N=100: done
+M=848, N=139: done
+M=848, N=193: done
+M=848, N=268: done
+M=848, N=373: done
+M=848, N=518: done
+M=848, N=720: done
+M=848, N=1000: done
+M=1389, N=10: done
+M=1389, N=14: done
+M=1389, N=19: done
+M=1389, N=27: done
+M=1389, N=37: done
+M=1389, N=52: done
+M=1389, N=72: done
+M=1389, N=100: done
+M=1389, N=139: done
+M=1389, N=193: done
+M=1389, N=268: done
+M=1389, N=373: done
+M=1389, N=518: done
+M=1389, N=720: done
+M=1389, N=1000: done
+M=2276, N=10: done
+M=2276, N=14: done
+M=2276, N=19: done
+M=2276, N=27: done
+M=2276, N=37: done
+M=2276, N=52: done
+M=2276, N=72: done
+M=2276, N=100: done
+M=2276, N=139: done
+M=2276, N=193: done
+M=2276, N=268: done
+M=2276, N=373: done
+M=2276, N=518: done
+M=2276, N=720: done
+M=2276, N=1000: done
+M=3728, N=10: done
+M=3728, N=14: done
+M=3728, N=19: done
+M=3728, N=27: done
+M=3728, N=37: done
+M=3728, N=52: done
+M=3728, N=72: done
+M=3728, N=100: done
+M=3728, N=139: done
+M=3728, N=193: done
+M=3728, N=268: done
+M=3728, N=373: done
+M=3728, N=518: done
+M=3728, N=720: done
+M=3728, N=1000: done
+M=6105, N=10: done
+M=6105, N=14: done
+M=6105, N=19: done
+M=6105, N=27: done
+M=6105, N=37: done
+M=6105, N=52: done
+M=6105, N=72: done
+M=6105, N=100: done
+M=6105, N=139: done
+M=6105, N=193: done
+M=6105, N=268: done
+M=6105, N=373: done
+M=6105, N=518: done
+M=6105, N=720: done
+M=6105, N=1000: done
+M=10000, N=10: done
+M=10000, N=14: done
+M=10000, N=19: done
+M=10000, N=27: done
+M=10000, N=37: done
+M=10000, N=52: done
+M=10000, N=72: done
+M=10000, N=100: done
+M=10000, N=139: done
+M=10000, N=193: done
+M=10000, N=268: done
+M=10000, N=373: done
+M=10000, N=518: done
+M=10000, N=720: done
+M=10000, N=1000: done
+Saved raw outputs to: /home/takanami/cot_asymptotics/softmax_heatmap/results/softmax_heatmap_20260410_195447
+usage: jupyter [-h] [--version] [--config-dir] [--data-dir] [--runtime-dir]
+               [--paths] [--json] [--debug]
+               [subcommand]
+
+Jupyter: Interactive Computing
+
+positional arguments:
+  subcommand     the subcommand to launch
+
+options:
+  -h, --help     show this help message and exit
+  --version      show the versions of core jupyter packages and exit
+  --config-dir   show Jupyter config dir
+  --data-dir     show Jupyter data dir
+  --runtime-dir  show Jupyter runtime dir
+  --paths        show all Jupyter paths. Add --json for machine-readable
+                 format.
+  --json         output paths as machine-readable json
+  --debug        output debug information about paths
+
+Available subcommands: kernel kernelspec migrate run troubleshoot
+
+Jupyter command `jupyter-nbconvert` not found.
