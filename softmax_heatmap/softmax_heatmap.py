@@ -31,7 +31,7 @@ SEED = 941
 N_TRIALS = 1  # fixed by design
 
 USE_HISTORY_AT_INFERENCE = True
-ATTN_MASK_MODE = "history_cot"  # "data_only" | "history_cot"
+ATTN_MASK_MODE = "data_only"  # "data_only" | "history_cot"
 
 DE = 2 * D + 2
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

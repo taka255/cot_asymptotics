@@ -7,7 +7,7 @@ OUTDIR="$BASE_DIR/results/softmax_heatmap_${TS}"
 LOGFILE="$BASE_DIR/log_${TS}.txt"
 mkdir -p "$BASE_DIR/results"
 
-nohup bash -lc "cd \"$BASE_DIR\" && python exp_fixed_DM_vary_N_dynamics_softmax_heatmap.py --outdir \"$OUTDIR\" && OUTDIR=\"$OUTDIR\" jupyter nbconvert --to notebook --execute \"plot.ipynb\" --output \"plot_executed_${TS}.ipynb\" --ExecutePreprocessor.timeout=-1" > "$LOGFILE" 2>&1 &
+nohup bash -lc "cd \"$BASE_DIR\" && python softmax_heatmap.py --outdir \"$OUTDIR\" && OUTDIR=\"$OUTDIR\" jupyter nbconvert --to notebook --execute \"plot.ipynb\" --output \"plot_executed_${TS}.ipynb\" --ExecutePreprocessor.timeout=-1" > "$LOGFILE" 2>&1 &
 
 echo "PID=$!"
 echo "OUTDIR=$OUTDIR"

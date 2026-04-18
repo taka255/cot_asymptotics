@@ -19,7 +19,7 @@ N_LIST = np.round(np.linspace(10, 400, 15)).astype(int).tolist()
 BATCH_SIZE = 300
 ADAM_LR = 1e-3
 PARAM_L2_LAMBDA = 0.001
-ITERATIONS = 3000
+ITERATIONS = 5000
 EVAL_T_LIST = list(range(0, 32))
 T_HEATMAP = 28
 EVAL_BATCH_SIZE = 4096
@@ -220,7 +220,7 @@ def main():
     for m in M_LIST:
         results_by_m_n[m] = {}
         for n in N_LIST:
-            run_seed = SEED + 100000 * int(m) + int(n)
+            run_seed = SEED + 1000 * int(m) + int(n)
             np.random.seed(run_seed)
             torch.manual_seed(run_seed)
 
