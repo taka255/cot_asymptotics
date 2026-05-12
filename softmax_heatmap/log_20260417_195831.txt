@@ -1,1 +1,0 @@
-python: can't open file '/home/takanami/cot_asymptotics/softmax_heatmap/exp_fixed_DM_vary_N_dynamics_softmax_heatmap.py': [Errno 2] No such file or directory
