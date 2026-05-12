@@ -143,6 +143,41 @@ function theorem_limit(alpha::Real, tau::Real, sigma::Real; prec::Int=256)
 end
 
 
+using CairoMakie
+
+"""
+    tau_c(alpha, sigma)
+
+Critical value τ_c(α, σ^2) under the symmetric-critical-point ansatz:
+
+    τ_c = 1 +
+          ((1+σ²)(α+1+2σ²-√Δ)(2α+2+2σ²-√Δ)) / (2α√Δ),
+
+where
+
+    Δ = (α+1+2σ²)^2 - 4α.
+
+Arguments:
+- `alpha` : α > 0
+- `sigma` : σ ≥ 0   (note: this is σ, not σ²)
+
+Returns:
+- `Float64` by default, or `BigFloat` if inputs are `BigFloat`.
+"""
+function tau_c(alpha, sigma)
+    α = promote(alpha, sigma)[1]
+    σ = promote(alpha, sigma)[2]
+
+    α <= 0 && throw(ArgumentError("alpha must be positive"))
+    σ < 0  && throw(ArgumentError("sigma must be nonnegative"))
+
+    Δ = (α + one(α) + 2σ^2)^2 - 4α
+    sqrtΔ = sqrt(Δ)
+
+    return one(α) + ((one(α) + σ^2) *
+                     (α + one(α) + 2σ^2 - sqrtΔ) *
+                     (2α + 2one(α) + 2σ^2 - sqrtΔ)) / (2α * sqrtΔ)
+end
 
 # ------------------------------------------------------------
 # Example usage when run as a script:
